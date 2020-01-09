@@ -23,6 +23,13 @@ resource "aws_security_group" "datafactory_db_sg" {
 
 }
 
+resource "aws_db_parameter_group" "postgres10_parameter_group" {
+  name        = "postgres10-parameter-group"
+  family      = "postgresql10"
+  description = "postgres10-parameter-group"
+}
+
+
 resource "aws_db_subnet_group" "datafactory_subnet_group" {
   name       = "datafactory_subnet"
   subnet_ids = "${var.subnets}"
@@ -42,7 +49,8 @@ resource "aws_db_instance" "datafactory_db" {
   instance_class           = "db.m4.large"
   multi_az                 = false
   name                     = "datafactory"
-  #parameter_group_name     = "mydbparamgroup1" # if you have tuned it
+   
+  parameter_group_name     = "${aws_db_parameter_group.postgres10_parameter_group.id}" # if you have tuned it
   password                 = "${trimspace(file("${path.module}/secrets/datafactory-password.txt"))}"
   port                     = 5432
   publicly_accessible      = false

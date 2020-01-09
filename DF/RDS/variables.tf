@@ -1,4 +1,4 @@
 variable "vpc" {}
 variable "subnets" {}
 
-variable "private_cidrs" {}
+#variable "private_cidrs" {}
